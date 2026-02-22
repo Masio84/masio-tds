@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { APP_CONFIG } from "@/config/app.config"
 import { BRANDING } from "@/config/branding.config"
 
@@ -15,6 +16,7 @@ type Lead = {
 
 export default function AdminPage() {
   const [leads, setLeads] = useState<Lead[]>([])
+  const router = useRouter()
 
   async function fetchLeads() {
     const res = await fetch("/api/leads")
@@ -40,6 +42,11 @@ export default function AdminPage() {
     fetchLeads()
   }
 
+  async function handleLogout() {
+    await fetch("/api/logout", { method: "POST" })
+    router.push("/login")
+  }
+
   useEffect(() => {
     fetchLeads()
   }, [])
@@ -49,84 +56,97 @@ export default function AdminPage() {
   const pending = total - contacted
 
   return (
-    <main className={`min-h-screen ${BRANDING.colors.background} ${BRANDING.typography.spacing}`}>
-      
-      {/* Header */}
-      <div className="mb-10">
-        <h1 className={`text-3xl font-bold ${BRANDING.colors.text}`}>
-          {APP_CONFIG.appName} — Dashboard
-        </h1>
-        <p className={`${BRANDING.colors.mutedText}`}>
-          Panel interno de gestión de leads
-        </p>
+    <div className={`min-h-screen ${BRANDING.colors.background}`}>
+
+      {/* 🔝 Top Navigation Bar */}
+      <div className={`${BRANDING.colors.surface} border-b ${BRANDING.colors.border} px-10 py-4 flex justify-between items-center`}>
+        <div>
+          <h1 className={`font-semibold ${BRANDING.colors.text}`}>
+            {APP_CONFIG.appName}
+          </h1>
+          <span className={`${BRANDING.colors.mutedText} text-sm`}>
+            Admin Dashboard
+          </span>
+        </div>
+
+        <button
+          onClick={handleLogout}
+          className={`px-4 py-2 rounded-lg border ${BRANDING.colors.border} ${BRANDING.colors.text} hover:bg-gray-100 transition`}
+        >
+          Logout
+        </button>
       </div>
 
-      {/* Metrics */}
-      <div className="grid md:grid-cols-3 gap-6 mb-10">
-        <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-xl p-6 border ${BRANDING.colors.border}`}>
-          <p className={`${BRANDING.colors.mutedText}`}>Total Leads</p>
-          <h2 className="text-2xl font-bold">{total}</h2>
+      <main className={`${BRANDING.typography.spacing}`}>
+
+        {/* 📊 Metrics */}
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
+          <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-xl p-6 border ${BRANDING.colors.border}`}>
+            <p className={`${BRANDING.colors.mutedText}`}>Total Leads</p>
+            <h2 className="text-2xl font-bold">{total}</h2>
+          </div>
+
+          <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-xl p-6 border ${BRANDING.colors.border}`}>
+            <p className={`${BRANDING.colors.mutedText}`}>Pendientes</p>
+            <h2 className="text-2xl font-bold text-yellow-600">{pending}</h2>
+          </div>
+
+          <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-xl p-6 border ${BRANDING.colors.border}`}>
+            <p className={`${BRANDING.colors.mutedText}`}>Contactados</p>
+            <h2 className="text-2xl font-bold text-green-600">{contacted}</h2>
+          </div>
         </div>
 
-        <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-xl p-6 border ${BRANDING.colors.border}`}>
-          <p className={`${BRANDING.colors.mutedText}`}>Pendientes</p>
-          <h2 className="text-2xl font-bold text-yellow-600">{pending}</h2>
-        </div>
-
-        <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-xl p-6 border ${BRANDING.colors.border}`}>
-          <p className={`${BRANDING.colors.mutedText}`}>Contactados</p>
-          <h2 className="text-2xl font-bold text-green-600">{contacted}</h2>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-xl border ${BRANDING.colors.border} overflow-hidden`}>
-        <table className="w-full text-sm">
-          <thead className={`${BRANDING.colors.background}`}>
-            <tr className={`border-b ${BRANDING.colors.border}`}>
-              <th className="p-4 text-left">Nombre</th>
-              <th className="p-4 text-left">Email</th>
-              <th className="p-4 text-left">Teléfono</th>
-              <th className="p-4 text-left">Mensaje</th>
-              <th className="p-4 text-left">Estado</th>
-              <th className="p-4 text-left">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leads.map((lead) => (
-              <tr key={lead.id} className={`border-b ${BRANDING.colors.border}`}>
-                <td className="p-4">{lead.name}</td>
-                <td className="p-4">{lead.email}</td>
-                <td className="p-4">{lead.phone}</td>
-                <td className="p-4">{lead.message}</td>
-                <td className="p-4">
-                  {lead.contacted ? (
-                    <span className="text-green-600 font-semibold">Contactado</span>
-                  ) : (
-                    <span className="text-yellow-600 font-semibold">Pendiente</span>
-                  )}
-                </td>
-                <td className="p-4 flex gap-2">
-                  {!lead.contacted && (
-                    <button
-                      onClick={() => markAsContacted(lead.id)}
-                      className={`${BRANDING.colors.primary} ${BRANDING.colors.primaryText} px-3 py-1 rounded-lg text-sm`}
-                    >
-                      Marcar
-                    </button>
-                  )}
-                  <button
-                    onClick={() => deleteLead(lead.id)}
-                    className={`${BRANDING.colors.danger} text-white px-3 py-1 rounded-lg text-sm`}
-                  >
-                    Eliminar
-                  </button>
-                </td>
+        {/* 📋 Table */}
+        <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-xl border ${BRANDING.colors.border} overflow-hidden`}>
+          <table className="w-full text-sm">
+            <thead className={`${BRANDING.colors.background}`}>
+              <tr className={`border-b ${BRANDING.colors.border}`}>
+                <th className="p-4 text-left">Nombre</th>
+                <th className="p-4 text-left">Email</th>
+                <th className="p-4 text-left">Teléfono</th>
+                <th className="p-4 text-left">Mensaje</th>
+                <th className="p-4 text-left">Estado</th>
+                <th className="p-4 text-left">Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </main>
+            </thead>
+            <tbody>
+              {leads.map((lead) => (
+                <tr key={lead.id} className={`border-b ${BRANDING.colors.border}`}>
+                  <td className="p-4">{lead.name}</td>
+                  <td className="p-4">{lead.email}</td>
+                  <td className="p-4">{lead.phone}</td>
+                  <td className="p-4">{lead.message}</td>
+                  <td className="p-4">
+                    {lead.contacted ? (
+                      <span className="text-green-600 font-semibold">Contactado</span>
+                    ) : (
+                      <span className="text-yellow-600 font-semibold">Pendiente</span>
+                    )}
+                  </td>
+                  <td className="p-4 flex gap-2">
+                    {!lead.contacted && (
+                      <button
+                        onClick={() => markAsContacted(lead.id)}
+                        className={`${BRANDING.colors.primary} ${BRANDING.colors.primaryText} px-3 py-1 rounded-lg text-sm`}
+                      >
+                        Marcar
+                      </button>
+                    )}
+                    <button
+                      onClick={() => deleteLead(lead.id)}
+                      className={`${BRANDING.colors.danger} text-white px-3 py-1 rounded-lg text-sm`}
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+      </main>
+    </div>
   )
 }
