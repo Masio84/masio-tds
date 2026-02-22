@@ -36,20 +36,30 @@ export async function POST(request: Request) {
       VALUES (${name}, ${email}, ${phone}, ${message})
     `
 
-    // Notificación Telegram
+       // Notificación Telegram (Tarjeta Ejecutiva Elegante)
     if (
       process.env.TELEGRAM_BOT_TOKEN &&
       process.env.TELEGRAM_CHAT_ID
     ) {
       const telegramMessage = `
-🚀 Nuevo Lead MasioTDS
+<b>📥 Nuevo Lead — MasioTDS</b>
 
-👤 Nombre: ${name}
-📧 Email: ${email}
-📱 Teléfono: ${phone || "No proporcionado"}
+━━━━━━━━━━━━━━━━━━
 
-📝 Mensaje:
+<b>👤 Nombre</b>
+${name}
+
+<b>📧 Email</b>
+<a href="mailto:${email}">${email}</a>
+
+<b>📱 Teléfono</b>
+${phone || "No proporcionado"}
+
+<b>📝 Mensaje</b>
 ${message}
+
+━━━━━━━━━━━━━━━━━━
+<i>Creative Developer Studio</i>
 `
 
       await fetch(
@@ -62,6 +72,8 @@ ${message}
           body: JSON.stringify({
             chat_id: process.env.TELEGRAM_CHAT_ID,
             text: telegramMessage,
+            parse_mode: "HTML",
+            disable_web_page_preview: true,
           }),
         }
       )
