@@ -67,6 +67,44 @@ export default function Home() {
 
       </section>
 
+      <section className="py-20 px-6 border-t border-black dark:border-green-500">
+  <h3 className="text-3xl font-bold text-center mb-10 text-black dark:text-green-400">
+    Solicita un Diagnóstico Digital
+  </h3>
+
+  <form
+    onSubmit={async (e) => {
+      e.preventDefault()
+      const form = e.currentTarget
+
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        message: form.message.value,
+      }
+
+      await fetch("/api/leads", {
+        method: "POST",
+        body: JSON.stringify(data),
+      })
+
+      alert("Solicitud enviada correctamente.")
+      form.reset()
+    }}
+    className="max-w-xl mx-auto flex flex-col gap-4"
+  >
+    <input name="name" placeholder="Nombre" required className="border p-3 bg-white dark:bg-black dark:text-green-400 border-black dark:border-green-500" />
+    <input name="email" placeholder="Correo" required className="border p-3 bg-white dark:bg-black dark:text-green-400 border-black dark:border-green-500" />
+    <input name="phone" placeholder="Teléfono" className="border p-3 bg-white dark:bg-black dark:text-green-400 border-black dark:border-green-500" />
+    <textarea name="message" placeholder="Mensaje" required className="border p-3 bg-white dark:bg-black dark:text-green-400 border-black dark:border-green-500" />
+
+    <button type="submit" className="bg-black text-white dark:bg-green-500 dark:text-black p-3">
+      Enviar
+    </button>
+  </form>
+</section>
+
     </main>
   )
 }
