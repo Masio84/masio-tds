@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { APP_CONFIG } from "@/config/app.config"
 
 export default function Home() {
   const [loading, setLoading] = useState(false)
@@ -41,54 +42,63 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-black text-green-400 p-10">
-      <h1 className="text-4xl font-bold mb-10">
-        Masio Technologies & Digital Solutions
+      
+      {/* Nombre dinámico */}
+      <h1 className="text-4xl font-bold mb-2 text-center">
+        {APP_CONFIG.appName}
       </h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4 w-full max-w-md"
-      >
-        <input
-          name="name"
-          placeholder="Nombre"
-          required
-          className="p-3 bg-black border border-green-400"
-        />
-        <input
-          name="email"
-          placeholder="Correo"
-          required
-          className="p-3 bg-black border border-green-400"
-        />
-        <input
-          name="phone"
-          placeholder="Teléfono"
-          className="p-3 bg-black border border-green-400"
-        />
-        <textarea
-          name="message"
-          placeholder="Mensaje"
-          required
-          className="p-3 bg-black border border-green-400"
-        />
+      {/* Tagline dinámico */}
+      <p className="mb-10 text-center opacity-80">
+        {APP_CONFIG.appTagline}
+      </p>
 
-        {/* Honeypot invisible */}
-        <input
-          type="text"
-          name="company"
-          style={{ display: "none" }}
-          autoComplete="off"
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="p-3 bg-green-500 text-black font-bold"
+      {APP_CONFIG.features.enableContactForm && (
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4 w-full max-w-md"
         >
-          {loading ? "Enviando..." : "Enviar"}
-        </button>
-      </form>
+          <input
+            name="name"
+            placeholder="Nombre"
+            required
+            className="p-3 bg-black border border-green-400"
+          />
+          <input
+            name="email"
+            placeholder="Correo"
+            required
+            className="p-3 bg-black border border-green-400"
+          />
+          <input
+            name="phone"
+            placeholder="Teléfono"
+            className="p-3 bg-black border border-green-400"
+          />
+          <textarea
+            name="message"
+            placeholder="Mensaje"
+            required
+            className="p-3 bg-black border border-green-400"
+          />
+
+          {/* Honeypot invisible */}
+          <input
+            type="text"
+            name="company"
+            style={{ display: "none" }}
+            autoComplete="off"
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="p-3 bg-green-500 text-black font-bold"
+          >
+            {loading ? "Enviando..." : "Enviar"}
+          </button>
+        </form>
+      )}
     </main>
   )
 }
