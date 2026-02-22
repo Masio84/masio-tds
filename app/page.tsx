@@ -94,8 +94,7 @@ export default function Home() {
           <button
             type="submit"
             disabled={loading}
-            className={`p-3 ${BRANDING.colors.button} ${BRANDING.colors.buttonText} font-bold`}
-          >
+className={`p-3 ${BRANDING.colors.primary} ${BRANDING.colors.primaryText} font-bold rounded-lg`}          >
             {loading ? "Enviando..." : "Enviar"}
           </button>
         </form>
