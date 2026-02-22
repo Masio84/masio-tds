@@ -1,17 +1,19 @@
 import { NextResponse } from "next/server"
 import { neon } from "@neondatabase/serverless"
 
+function getSql() {
+  const databaseUrl = process.env.DATABASE_URL
+
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL not defined")
+  }
+
+  return neon(databaseUrl)
+}
+
 export async function PATCH(request: Request) {
   try {
-    if (!process.env.DATABASE_URL) {
-      return NextResponse.json(
-        { error: "DATABASE_URL not defined" },
-        { status: 500 }
-      )
-    }
-
-    const sql = neon(process.env.DATABASE_URL)
-
+    const sql = getSql()
     const { id } = await request.json()
 
     await sql`
@@ -32,15 +34,7 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    if (!process.env.DATABASE_URL) {
-      return NextResponse.json(
-        { error: "DATABASE_URL not defined" },
-        { status: 500 }
-      )
-    }
-
-    const sql = neon(process.env.DATABASE_URL)
-
+    const sql = getSql()
     const { id } = await request.json()
 
     await sql`
