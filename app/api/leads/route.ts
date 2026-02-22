@@ -4,7 +4,6 @@ import { neon } from "@neondatabase/serverless"
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-
     const { name, email, phone, message } = body
 
     if (!name || !email || !message) {
@@ -23,10 +22,42 @@ export async function POST(request: Request) {
 
     const sql = neon(process.env.DATABASE_URL)
 
+    // 1️⃣ Guardar en Neon
     await sql`
       INSERT INTO leads (name, email, phone, message)
       VALUES (${name}, ${email}, ${phone}, ${message})
     `
+
+    // 2️⃣ Enviar notificación a Telegram
+    if (
+      process.env.TELEGRAM_BOT_TOKEN &&
+      process.env.TELEGRAM_CHAT_ID
+    ) {
+      const telegramMessage = `
+🚀 Nuevo Lead MasioTDS
+
+👤 Nombre: ${name}
+📧 Email: ${email}
+📱 Teléfono: ${phone || "No proporcionado"}
+
+📝 Mensaje:
+${message}
+`
+
+      await fetch(
+        `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chat_id: process.env.TELEGRAM_CHAT_ID,
+            text: telegramMessage,
+          }),
+        }
+      )
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {
