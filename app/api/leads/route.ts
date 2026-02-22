@@ -4,7 +4,15 @@ import { neon } from "@neondatabase/serverless"
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { name, email, phone, message } = body
+    const { name, email, phone, message, company } = body
+
+    // 🛑 Honeypot: si el campo oculto tiene algo, es bot
+    if (company && company.trim() !== "") {
+      return NextResponse.json(
+        { success: true }, 
+        { status: 200 }
+      )
+    }
 
     if (!name || !email || !message) {
       return NextResponse.json(
@@ -22,13 +30,13 @@ export async function POST(request: Request) {
 
     const sql = neon(process.env.DATABASE_URL)
 
-    // 1️⃣ Guardar en Neon
+    // Guardar en Neon
     await sql`
       INSERT INTO leads (name, email, phone, message)
       VALUES (${name}, ${email}, ${phone}, ${message})
     `
 
-    // 2️⃣ Enviar notificación a Telegram
+    // Notificación Telegram
     if (
       process.env.TELEGRAM_BOT_TOKEN &&
       process.env.TELEGRAM_CHAT_ID
