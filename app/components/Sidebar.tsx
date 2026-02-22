@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { APP_CONFIG } from "@/config/app.config"
 import { UI_TEXT } from "@/config/ui.config"
+import ThemeToggle from "./ThemeToggle"
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -74,7 +75,12 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="mt-auto p-4 border-t border-slate-300 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
-        {!collapsed && "MTDS Starter CRM v1"}
+        {!collapsed && (
+          <>
+            <div className="mb-4">MTDS Starter CRM v1</div>
+            <ThemeToggle />
+          </>
+        )}
       </div>
     </motion.aside>
   )
