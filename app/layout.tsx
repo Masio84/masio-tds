@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "MTDS Starter CRM System",
-  description: "Professional CRM Template by Masio Technologies",
+  description: "Sistema CRM profesional por Masio Technologies",
 }
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-200 text-slate-900 transition-colors duration-300`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors duration-300`}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           {children}
