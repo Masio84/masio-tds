@@ -1,16 +1,20 @@
 export const BRANDING = {
   colors: {
-    background: "bg-black",
-    text: "text-green-400",
-    border: "border-green-400",
-    button: "bg-green-500",
-    buttonText: "text-black",
+    background: "bg-gray-50",
+    surface: "bg-white",
+    text: "text-gray-900",
+    mutedText: "text-gray-500",
+    border: "border-gray-200",
+    primary: "bg-blue-600",
+    primaryText: "text-white",
+    danger: "bg-red-500",
+    shadow: "shadow-md",
   },
 
   typography: {
-    titleSize: "text-4xl",
+    titleSize: "text-3xl",
     spacing: "p-10",
   },
 
-  mode: "dark", // future expansion
+  mode: "light",
 }
