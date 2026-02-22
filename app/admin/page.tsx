@@ -99,70 +99,80 @@ export default function AdminPage() {
 
         </div>
 
-        {/* 📋 Table */}
         <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-xl border ${BRANDING.colors.border} overflow-hidden`}>
 
-          <table className="w-full text-sm">
+  <table className="w-full text-sm">
 
-            <thead className="bg-slate-200">
-              <tr className={`border-b ${BRANDING.colors.border}`}>
-                <th className="p-4 text-left font-semibold">Nombre</th>
-                <th className="p-4 text-left font-semibold">Email</th>
-                <th className="p-4 text-left font-semibold">Teléfono</th>
-                <th className="p-4 text-left font-semibold">Mensaje</th>
-                <th className="p-4 text-left font-semibold">Estado</th>
-                <th className="p-4 text-left font-semibold">Acciones</th>
-              </tr>
-            </thead>
+    <thead className="bg-slate-300">
+      <tr className={`border-b ${BRANDING.colors.border}`}>
+        <th className="p-4 text-left font-semibold text-slate-800">Nombre</th>
+        <th className="p-4 text-left font-semibold text-slate-800">Email</th>
+        <th className="p-4 text-left font-semibold text-slate-800">Teléfono</th>
+        <th className="p-4 text-left font-semibold text-slate-800">Mensaje</th>
+        <th className="p-4 text-left font-semibold text-slate-800">Estado</th>
+        <th className="p-4 text-left font-semibold text-slate-800">Acciones</th>
+      </tr>
+    </thead>
 
-            <tbody>
-              {leads.map((lead) => (
-                <tr
-                  key={lead.id}
-                  className={`border-b ${BRANDING.colors.border} hover:bg-slate-50 transition`}
-                >
-                  <td className="p-4">{lead.name}</td>
-                  <td className="p-4">{lead.email}</td>
-                  <td className="p-4">{lead.phone}</td>
-                  <td className="p-4 max-w-xs truncate">{lead.message}</td>
+    <tbody>
+      {leads.map((lead) => (
+        <tr
+          key={lead.id}
+          className={`border-b ${BRANDING.colors.border} hover:bg-slate-100 transition`}
+        >
+          <td className="p-4 font-medium text-slate-900">
+            {lead.name}
+          </td>
 
-                  <td className="p-4">
-                    {lead.contacted ? (
-                      <span className="text-emerald-600 font-semibold">
-                        Contactado
-                      </span>
-                    ) : (
-                      <span className="text-amber-600 font-semibold">
-                        Pendiente
-                      </span>
-                    )}
-                  </td>
+          <td className="p-4 text-slate-700">
+            {lead.email}
+          </td>
 
-                  <td className="p-4 flex gap-2">
+          <td className="p-4 text-slate-700">
+            {lead.phone}
+          </td>
 
-                    {!lead.contacted && (
-                      <button
-                        onClick={() => markAsContacted(lead.id)}
-                        className={`${BRANDING.colors.primary} ${BRANDING.colors.primaryText} px-3 py-1 rounded-lg text-sm transition hover:opacity-90`}
-                      >
-                        Marcar
-                      </button>
-                    )}
+          <td className="p-4 text-slate-600 max-w-xs truncate">
+            {lead.message}
+          </td>
 
-                    <button
-                      onClick={() => deleteLead(lead.id)}
-                      className={`${BRANDING.colors.danger} text-white px-3 py-1 rounded-lg text-sm transition hover:opacity-90`}
-                    >
-                      Eliminar
-                    </button>
+          <td className="p-4">
+            {lead.contacted ? (
+              <span className="text-emerald-700 font-semibold">
+                Contactado
+              </span>
+            ) : (
+              <span className="text-amber-700 font-semibold">
+                Pendiente
+              </span>
+            )}
+          </td>
 
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+          <td className="p-4 flex gap-2">
 
-          </table>
-        </div>
+            {!lead.contacted && (
+              <button
+                onClick={() => markAsContacted(lead.id)}
+                className="bg-slate-900 text-white px-3 py-1 rounded-lg text-sm transition hover:opacity-90"
+              >
+                Marcar
+              </button>
+            )}
+
+            <button
+              onClick={() => deleteLead(lead.id)}
+              className="bg-red-600 text-white px-3 py-1 rounded-lg text-sm transition hover:opacity-90"
+            >
+              Eliminar
+            </button>
+
+          </td>
+        </tr>
+      ))}
+    </tbody>
+
+  </table>
+</div>
 
       </main>
     </div>
