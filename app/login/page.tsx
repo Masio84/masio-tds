@@ -26,13 +26,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-200">
+    <div className="min-h-screen flex items-center justify-center bg-slate-300">
 
       <form
         onSubmit={handleLogin}
-        className="bg-white p-10 rounded-xl shadow-xl w-96 border border-slate-300"
+        className="bg-white p-10 rounded-xl shadow-2xl w-96 border border-slate-300"
       >
-        <h2 className="text-2xl font-bold mb-2 text-slate-900">
+        <h2 className="text-2xl font-bold mb-1 text-slate-900">
           {APP_CONFIG.appName}
         </h2>
 
@@ -45,12 +45,33 @@ export default function LoginPage() {
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-3 border border-slate-300 rounded mb-6 focus:outline-none focus:ring-2 focus:ring-slate-400"
+          className="
+            w-full 
+            p-3 
+            border 
+            border-slate-400 
+            rounded 
+            mb-6 
+            bg-white 
+            text-slate-900 
+            placeholder:text-slate-500
+            focus:outline-none 
+            focus:ring-2 
+            focus:ring-slate-600
+          "
         />
 
         <button
           type="submit"
-          className="w-full bg-slate-900 text-white py-3 rounded-lg transition hover:opacity-90"
+          className="
+            w-full 
+            bg-slate-900 
+            text-white 
+            py-3 
+            rounded-lg 
+            transition 
+            hover:bg-slate-800
+          "
         >
           Ingresar
         </button>
