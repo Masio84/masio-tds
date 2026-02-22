@@ -16,6 +16,7 @@ export default function Home() {
       email: formData.get("email") as string,
       phone: formData.get("phone") as string,
       message: formData.get("message") as string,
+      company: formData.get("company") as string, // honeypot
     }
 
     const response = await fetch("/api/leads", {
@@ -70,6 +71,14 @@ export default function Home() {
           placeholder="Mensaje"
           required
           className="p-3 bg-black border border-green-400"
+        />
+
+        {/* Honeypot invisible */}
+        <input
+          type="text"
+          name="company"
+          style={{ display: "none" }}
+          autoComplete="off"
         />
 
         <button
