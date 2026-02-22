@@ -1,37 +1,46 @@
-import { neon } from "@neondatabase/serverless"
-import { redirect } from "next/navigation"
+"use client"
 
-function getSql() {
-  const databaseUrl = process.env.DATABASE_URL
-  if (!databaseUrl) {
-    throw new Error("DATABASE_URL not defined")
-  }
-  return neon(databaseUrl)
+import { useEffect, useState } from "react"
+
+type Lead = {
+  id: number
+  name: string
+  email: string
+  phone: string
+  message: string
+  contacted: boolean
 }
 
-async function getLeads() {
-  const sql = getSql()
-  const leads = await sql`
-    SELECT *
-    FROM leads
-    ORDER BY created_at DESC
-  `
-  return leads
-}
+export default function AdminPage() {
+  const [leads, setLeads] = useState<Lead[]>([])
 
-export default async function AdminPage({
-  searchParams,
-}: {
-  searchParams: { password?: string }
-}) {
-  const adminPassword = process.env.ADMIN_PASSWORD
-
-  // 🔐 Verificación
-  if (!searchParams.password || searchParams.password !== adminPassword) {
-    redirect("/")
+  async function fetchLeads() {
+    const res = await fetch("/api/leads")
+    const data = await res.json()
+    setLeads(data)
   }
 
-  const leads = await getLeads()
+  async function markAsContacted(id: number) {
+    await fetch("/api/admin", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    })
+    fetchLeads()
+  }
+
+  async function deleteLead(id: number) {
+    await fetch("/api/admin", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    })
+    fetchLeads()
+  }
+
+  useEffect(() => {
+    fetchLeads()
+  }, [])
 
   return (
     <main className="min-h-screen bg-black text-green-400 p-10">
@@ -47,10 +56,11 @@ export default async function AdminPage({
             <th className="p-3 text-left">Teléfono</th>
             <th className="p-3 text-left">Mensaje</th>
             <th className="p-3 text-left">Estado</th>
+            <th className="p-3 text-left">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {leads.map((lead: any) => (
+          {leads.map((lead) => (
             <tr key={lead.id} className="border-b border-green-800">
               <td className="p-3">{lead.name}</td>
               <td className="p-3">{lead.email}</td>
@@ -58,6 +68,22 @@ export default async function AdminPage({
               <td className="p-3">{lead.message}</td>
               <td className="p-3">
                 {lead.contacted ? "Contactado" : "Pendiente"}
+              </td>
+              <td className="p-3 flex gap-2">
+                {!lead.contacted && (
+                  <button
+                    onClick={() => markAsContacted(lead.id)}
+                    className="bg-green-600 text-black px-3 py-1"
+                  >
+                    Marcar
+                  </button>
+                )}
+                <button
+                  onClick={() => deleteLead(lead.id)}
+                  className="bg-red-600 text-white px-3 py-1"
+                >
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}
