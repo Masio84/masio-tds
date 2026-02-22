@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { neon } from "@neondatabase/serverless"
+import { APP_CONFIG } from "@/config/app.config"
 
 function getSql() {
   const databaseUrl = process.env.DATABASE_URL
@@ -55,13 +56,14 @@ export async function POST(request: Request) {
       VALUES (${name}, ${email}, ${phone}, ${message})
     `
 
-    // Telegram elegante
-    if (
-      process.env.TELEGRAM_BOT_TOKEN &&
-      process.env.TELEGRAM_CHAT_ID
-    ) {
-      const telegramMessage = `
-<b>📥 Nuevo Lead — MasioTDS</b>
+   // Telegram solo si está habilitado
+if (
+  APP_CONFIG.features.enableTelegram &&
+  process.env.TELEGRAM_BOT_TOKEN &&
+  process.env.TELEGRAM_CHAT_ID
+) {
+  const telegramMessage = `
+<b>📥 Nuevo Lead — ${APP_CONFIG.appName}</b>
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -78,25 +80,25 @@ ${phone || "No proporcionado"}
 ${message}
 
 ━━━━━━━━━━━━━━━━━━
-<i>Creative Developer Studio</i>
+<i>${APP_CONFIG.appTagline}</i>
 `
 
-      await fetch(
-        `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            chat_id: process.env.TELEGRAM_CHAT_ID,
-            text: telegramMessage,
-            parse_mode: "HTML",
-            disable_web_page_preview: true,
-          }),
-        }
-      )
+  await fetch(
+    `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chat_id: process.env.TELEGRAM_CHAT_ID,
+        text: telegramMessage,
+        parse_mode: "HTML",
+        disable_web_page_preview: true,
+      }),
     }
+  )
+}
 
     return NextResponse.json({ success: true })
   } catch (error) {
