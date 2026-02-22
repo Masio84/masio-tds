@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation"
 import { APP_CONFIG } from "@/config/app.config"
+import { UI_TEXT } from "@/config/ui.config"
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -22,23 +23,26 @@ export default function Sidebar() {
         </h2>
 
         <nav className="flex flex-col gap-2 text-sm">
+
           <a href="/admin" className={linkClass("/admin")}>
-            Dashboard
+            {UI_TEXT.panelTitle}
           </a>
 
-          <a href="#" className="text-slate-500 cursor-not-allowed px-3 py-2">
-            Leads
-          </a>
+          <span className="text-slate-500 px-3 py-2 cursor-not-allowed">
+            {UI_TEXT.contacts}
+          </span>
 
-          <a href="#" className="text-slate-500 cursor-not-allowed px-3 py-2">
+          <span className="text-slate-500 px-3 py-2 cursor-not-allowed">
             Reportes
-          </a>
+          </span>
+
         </nav>
       </div>
 
       <div className="text-xs text-slate-500">
         MTDS Starter CRM v1
       </div>
+
     </aside>
   )
 }
