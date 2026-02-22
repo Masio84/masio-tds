@@ -1,17 +1,44 @@
 import { NextResponse } from "next/server"
 import { neon } from "@neondatabase/serverless"
 
+function getSql() {
+  const databaseUrl = process.env.DATABASE_URL
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL not defined")
+  }
+  return neon(databaseUrl)
+}
+
+// 🔹 GET → Obtener todos los leads
+export async function GET() {
+  try {
+    const sql = getSql()
+
+    const leads = await sql`
+      SELECT *
+      FROM leads
+      ORDER BY created_at DESC
+    `
+
+    return NextResponse.json(leads)
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json(
+      { error: "Error fetching leads" },
+      { status: 500 }
+    )
+  }
+}
+
+// 🔹 POST → Crear lead (formulario)
 export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { name, email, phone, message, company } = body
 
-    // 🛑 Honeypot: si el campo oculto tiene algo, es bot
+    // Honeypot
     if (company && company.trim() !== "") {
-      return NextResponse.json(
-        { success: true }, 
-        { status: 200 }
-      )
+      return NextResponse.json({ success: true })
     }
 
     if (!name || !email || !message) {
@@ -21,22 +48,14 @@ export async function POST(request: Request) {
       )
     }
 
-    if (!process.env.DATABASE_URL) {
-      return NextResponse.json(
-        { error: "DATABASE_URL not defined" },
-        { status: 500 }
-      )
-    }
+    const sql = getSql()
 
-    const sql = neon(process.env.DATABASE_URL)
-
-    // Guardar en Neon
     await sql`
       INSERT INTO leads (name, email, phone, message)
       VALUES (${name}, ${email}, ${phone}, ${message})
     `
 
-       // Notificación Telegram (Tarjeta Ejecutiva Elegante)
+    // Telegram elegante
     if (
       process.env.TELEGRAM_BOT_TOKEN &&
       process.env.TELEGRAM_CHAT_ID
