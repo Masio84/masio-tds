@@ -1,14 +1,14 @@
 export const BRANDING = {
   colors: {
-    background: "bg-gray-50",
+    background: "bg-slate-100",
     surface: "bg-white",
-    text: "text-gray-900",
-    mutedText: "text-gray-500",
-    border: "border-gray-200",
-    primary: "bg-blue-600",
+    text: "text-slate-800",
+    mutedText: "text-slate-500",
+    border: "border-slate-300",
+    primary: "bg-slate-800",
     primaryText: "text-white",
-    danger: "bg-red-500",
-    shadow: "shadow-md",
+    danger: "bg-red-600",
+    shadow: "shadow-lg",
   },
 
   typography: {
@@ -16,5 +16,5 @@ export const BRANDING = {
     spacing: "p-10",
   },
 
-  mode: "light",
+  mode: "corporate-soft",
 }
