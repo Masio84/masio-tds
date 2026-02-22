@@ -103,7 +103,7 @@ export default function AdminPage() {
 
   <table className="w-full text-sm">
 
-    <thead className="bg-slate-300">
+    <thead className="bg-slate-400">
       <tr className={`border-b ${BRANDING.colors.border}`}>
         <th className="p-4 text-left font-semibold text-slate-800">Nombre</th>
         <th className="p-4 text-left font-semibold text-slate-800">Email</th>
