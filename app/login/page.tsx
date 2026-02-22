@@ -2,61 +2,60 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { APP_CONFIG } from "@/config/app.config"
+import { UI_TEXT } from "@/config/ui.config"
 
 export default function LoginPage() {
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
   const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-    setError("")
 
     const res = await fetch("/api/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password }),
     })
 
     if (res.ok) {
       router.push("/admin")
     } else {
-      const data = await res.json()
-      setError(data.error || "Error")
+      alert("Contraseña incorrecta")
     }
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-black text-green-400">
+    <div className="min-h-screen flex items-center justify-center bg-slate-200">
+
       <form
         onSubmit={handleLogin}
-        className="bg-black border border-green-500 p-8 flex flex-col gap-4 w-80"
+        className="bg-white p-10 rounded-xl shadow-xl w-96 border border-slate-300"
       >
-        <h1 className="text-2xl font-bold text-center">
-          Acceso Administrativo
-        </h1>
+        <h2 className="text-2xl font-bold mb-2 text-slate-900">
+          {APP_CONFIG.appName}
+        </h2>
+
+        <p className="text-slate-600 mb-6 text-sm">
+          {UI_TEXT.appSection}
+        </p>
 
         <input
           type="password"
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="p-3 bg-black border border-green-400"
+          className="w-full p-3 border border-slate-300 rounded mb-6 focus:outline-none focus:ring-2 focus:ring-slate-400"
         />
-
-        {error && (
-          <p className="text-red-500 text-sm">{error}</p>
-        )}
 
         <button
           type="submit"
-          className="bg-green-500 text-black font-bold p-3"
+          className="w-full bg-slate-900 text-white py-3 rounded-lg transition hover:opacity-90"
         >
           Ingresar
         </button>
       </form>
-    </main>
+
+    </div>
   )
 }
