@@ -115,14 +115,14 @@ export default function AdminPage() {
         {/* 📋 Tabla */}
         <div className={`${BRANDING.colors.surface} ${BRANDING.colors.shadow} rounded-2xl border ${BRANDING.colors.border} overflow-hidden transition-all`}>
 
-          <div className={`p-6 border-b ${BRANDING.colors.border} bg-slate-50`}>
+          <div className={`p-6 border-b ${BRANDING.colors.border} bg-neutral-900/80`}>
             <h3 className={`font-bold ${BRANDING.colors.text}`}>Lista de Contactos Recientes</h3>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-100/50">
-                <tr className="border-b border-slate-200">
+              <thead className="bg-neutral-800/50">
+                <tr className={`border-b ${BRANDING.colors.border}`}>
                   <th className={`p-5 text-left font-bold ${BRANDING.colors.text} uppercase text-xs tracking-wider`}>
                     {UI_TEXT.name}
                   </th>
