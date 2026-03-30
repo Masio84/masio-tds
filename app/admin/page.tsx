@@ -20,9 +20,14 @@ export default function AdminPage() {
   const router = useRouter()
 
   async function fetchContacts() {
-    const res = await fetch("/api/leads")
-    const data = await res.json()
-    setContacts(data)
+    try {
+      const res = await fetch("/api/leads")
+      const data = await res.json()
+      setContacts(Array.isArray(data) ? data : [])
+    } catch (error) {
+      console.error("Error fetching contacts:", error)
+      setContacts([])
+    }
   }
 
   async function markAsAttended(id: number) {
