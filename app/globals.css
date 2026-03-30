@@ -1,17 +1,5 @@
 @import "tailwindcss";
 
-<<<<<<< HEAD
-/* Modo claro por defecto */
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-/* Modo oscuro controlado por clase */
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-=======
 @theme inline {
   --color-background: #000000;
   --color-foreground: #ffffff;
@@ -22,16 +10,11 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
->>>>>>> fe5435f0a26d62894eb6a10d3b02f82b3f681fd5
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-<<<<<<< HEAD
-  font-family: Arial, Helvetica, sans-serif;
-  transition: background 0.3s ease, color 0.3s ease;
-=======
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
 }
@@ -40,5 +23,4 @@ body {
   background-color: rgba(96, 165, 250, 0.3);
   /* blue-400 */
   color: #fff;
->>>>>>> fe5435f0a26d62894eb6a10d3b02f82b3f681fd5
 }

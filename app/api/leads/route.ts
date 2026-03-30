@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server"
-<<<<<<< HEAD
-import { neon } from "@neondatabase/serverless"
-import { APP_CONFIG } from "@/config/app.config"
-=======
 import { createClient } from "@supabase/supabase-js"
->>>>>>> fe5435f0a26d62894eb6a10d3b02f82b3f681fd5
+import { APP_CONFIG } from "@/config/app.config"
 
 // Inicializamos Supabase
 function getSupabaseClient() {
@@ -61,33 +57,23 @@ export async function POST(request: Request) {
 
     const supabase = getSupabaseClient()
 
-    const { error } = await supabase
+    const { error: supabaseError } = await supabase
       .from("leads")
       .insert([
         { name, email, phone, message }
       ])
 
-<<<<<<< HEAD
-   // Telegram solo si está habilitado
-if (
-  APP_CONFIG.features.enableTelegram &&
-  process.env.TELEGRAM_BOT_TOKEN &&
-  process.env.TELEGRAM_CHAT_ID
-) {
-  const telegramMessage = `
-<b>📥 Nuevo Lead — ${APP_CONFIG.appName}</b>
-=======
-    if (error) throw error
+    if (supabaseError) throw supabaseError
 
     // Telegram elegante (Opcional - No bloquea el éxito)
     try {
       if (
+        APP_CONFIG.features.enableTelegram &&
         process.env.TELEGRAM_BOT_TOKEN &&
         process.env.TELEGRAM_CHAT_ID
       ) {
         const telegramMessage = `
-<b>📥 Nuevo Lead — MasioTDS</b>
->>>>>>> fe5435f0a26d62894eb6a10d3b02f82b3f681fd5
+<b>📥 Nuevo Lead — ${APP_CONFIG.appName}</b>
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -107,21 +93,6 @@ ${message}
 <i>${APP_CONFIG.appTagline}</i>
 `
 
-<<<<<<< HEAD
-  await fetch(
-    `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chat_id: process.env.TELEGRAM_CHAT_ID,
-        text: telegramMessage,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-      }),
-=======
         await fetch(
           `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
           {
@@ -140,14 +111,11 @@ ${message}
       }
     } catch (teleError) {
       console.error("Telegram Notification Error (Non-fatal):", teleError)
->>>>>>> fe5435f0a26d62894eb6a10d3b02f82b3f681fd5
     }
-  )
-}
 
     return NextResponse.json({ success: true, message: "Lead registered successfully" })
   } catch (error: any) {
-    console.error("Supabase Error:", error)
+    console.error("Submission Error:", error)
     return NextResponse.json(
       { error: error?.message || "Internal Server Error" },
       { status: 500 }

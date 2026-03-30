@@ -1,32 +1,39 @@
 import { NextResponse } from "next/server"
-import { neon } from "@neondatabase/serverless"
+import { createClient } from "@supabase/supabase-js"
 
-function getSql() {
-  const databaseUrl = process.env.DATABASE_URL
+// Inicializamos Supabase
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-  if (!databaseUrl) {
-    throw new Error("DATABASE_URL not defined")
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("Missing Supabase credentials in .env file")
   }
 
-  return neon(databaseUrl)
+  return createClient(supabaseUrl, supabaseServiceKey)
 }
 
 export async function PATCH(request: Request) {
   try {
-    const sql = getSql()
+    const supabase = getSupabaseClient()
     const { id } = await request.json()
 
-    await sql`
-      UPDATE leads
-      SET contacted = TRUE
-      WHERE id = ${id}
-    `
+    if (!id) {
+      return NextResponse.json({ error: "Missing ID" }, { status: 400 })
+    }
+
+    const { error } = await supabase
+      .from("leads")
+      .update({ contacted: true })
+      .eq("id", id)
+
+    if (error) throw error
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error(error)
+  } catch (error: any) {
+    console.error("PATCH Error:", error)
     return NextResponse.json(
-      { error: "Error updating" },
+      { error: error?.message || "Error updating" },
       { status: 500 }
     )
   }
@@ -34,19 +41,25 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const sql = getSql()
+    const supabase = getSupabaseClient()
     const { id } = await request.json()
 
-    await sql`
-      DELETE FROM leads
-      WHERE id = ${id}
-    `
+    if (!id) {
+      return NextResponse.json({ error: "Missing ID" }, { status: 400 })
+    }
+
+    const { error } = await supabase
+      .from("leads")
+      .delete()
+      .eq("id", id)
+
+    if (error) throw error
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error(error)
+  } catch (error: any) {
+    console.error("DELETE Error:", error)
     return NextResponse.json(
-      { error: "Error deleting" },
+      { error: error?.message || "Error deleting" },
       { status: 500 }
     )
   }
