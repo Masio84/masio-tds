@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { APP_CONFIG } from "@/config/app.config"
+import { BRANDING } from "@/config/branding.config"
 import { UI_TEXT } from "@/config/ui.config"
 
 export default function LoginPage() {
@@ -26,57 +27,68 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-300">
-
+    <div
+      className={`min-h-screen flex items-center justify-center ${BRANDING.colors.background} transition-colors duration-300`}
+    >
       <form
         onSubmit={handleLogin}
-        className="bg-white p-10 rounded-xl shadow-2xl w-96 border border-slate-300"
+        className={`
+          ${BRANDING.colors.surface} 
+          ${BRANDING.colors.shadow} 
+          p-10 
+          rounded-xl 
+          w-96 
+          border 
+          ${BRANDING.colors.border}
+          transition-all
+        `}
       >
-        <h2 className="text-2xl font-bold mb-1 text-slate-900">
+        <h2 className={`text-2xl font-bold mb-1 ${BRANDING.colors.text}`}>
           {APP_CONFIG.appName}
         </h2>
 
-        <p className="text-slate-600 mb-6 text-sm">
-          {UI_TEXT.appSection}
+        <p className={`${BRANDING.colors.mutedText} mb-6 text-sm uppercase tracking-wider font-semibold`}>
+          {UI_TEXT.panelTitle}
         </p>
 
         <input
           type="password"
-          placeholder="Contraseña"
+          placeholder="Ingresa la contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="
+          className={`
             w-full 
             p-3 
             border 
-            border-slate-400 
+            ${BRANDING.colors.border} 
             rounded 
             mb-6 
-            bg-white 
-            text-slate-900 
-            placeholder:text-slate-500
+            ${BRANDING.colors.surface} 
+            ${BRANDING.colors.text} 
+            placeholder:opacity-50
             focus:outline-none 
             focus:ring-2 
-            focus:ring-slate-600
-          "
+            focus:ring-slate-400
+          `}
         />
 
         <button
           type="submit"
-          className="
+          className={`
             w-full 
-            bg-slate-900 
-            text-white 
+            ${BRANDING.colors.primary} 
+            ${BRANDING.colors.primaryText} 
             py-3 
             rounded-lg 
-            transition 
-            hover:bg-slate-800
-          "
+            font-bold
+            transition-all 
+            hover:opacity-90
+            active:scale-[0.98]
+          `}
         >
-          Ingresar
+          {UI_TEXT.login}
         </button>
       </form>
-
     </div>
   )
-}
+}

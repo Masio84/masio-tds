@@ -21,4 +21,6 @@ export const UI_TEXT = {
 
   contacted: "Atendido",
   notContacted: "Pendiente",
+  login: "Ingresar",
+  password: "Contraseña",
 }

@@ -4,84 +4,84 @@ import { useState } from "react"
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { APP_CONFIG } from "@/config/app.config"
-import { UI_TEXT } from "@/config/ui.config"
+import { APP_CONFIG } from "@/app/../config/app.config"
+import { UI_TEXT } from "@/app/../config/ui.config"
+import { BRANDING } from "@/app/../config/branding.config"
 import ThemeToggle from "./ThemeToggle"
 
 export default function Sidebar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
 
+  const activeLinkStyle = `${BRANDING.colors.primary} ${BRANDING.colors.primaryText}`
+  const inactiveLinkStyle = `${BRANDING.colors.text} hover:bg-slate-200 dark:hover:bg-slate-800 opacity-70`
+
   const linkClass = (path: string) =>
-    `flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-      pathname === path
-        ? "bg-slate-900 text-white dark:bg-slate-700"
-        : "text-slate-700 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-800"
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-bold text-sm ${
+      pathname === path ? activeLinkStyle : inactiveLinkStyle
     }`
 
   return (
     <motion.aside
-      animate={{ width: collapsed ? 80 : 240 }}
-      transition={{ duration: 0.3 }}
-      className="
+      animate={{ width: collapsed ? 80 : 280 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className={`
         h-screen 
-        bg-white 
-        dark:bg-slate-900 
+        ${BRANDING.colors.surface} 
         border-r 
-        border-slate-300 
-        dark:border-slate-700 
-        shadow-lg 
+        ${BRANDING.colors.border} 
+        ${BRANDING.colors.shadow} 
         flex 
         flex-col 
-        transition-colors 
-        duration-300
-      "
+        z-30
+        relative
+      `}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-300 dark:border-slate-700">
+      <div className={`flex items-center justify-between p-6 border-b ${BRANDING.colors.border}`}>
         {!collapsed && (
-          <h2 className="font-bold text-slate-900 dark:text-slate-100 text-lg">
-            {APP_CONFIG.appName}
+          <h2 className={`font-black ${BRANDING.colors.text} text-xl tracking-tighter`}>
+            {APP_CONFIG.appName.split(' ')[0]}
           </h2>
         )}
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition"
+          className={`${BRANDING.colors.mutedText} hover:${BRANDING.colors.text} transition-colors p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800`}
         >
           {collapsed ? "»" : "«"}
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex flex-col gap-2 p-4 text-sm">
-
+      <nav className="flex flex-col gap-3 p-4 flex-1">
         <Link href="/admin" className={linkClass("/admin")}>
-          <span>📊</span>
+          <span className="text-lg text-center w-6">📊</span>
           {!collapsed && <span>{UI_TEXT.panelTitle}</span>}
         </Link>
 
-        <div className="flex items-center gap-3 px-4 py-3 text-slate-400 dark:text-slate-600 cursor-not-allowed">
-          <span>👥</span>
-          {!collapsed && <span>{UI_TEXT.contacts}</span>}
+        <div className="flex items-center gap-3 px-4 py-3 text-slate-400 cursor-not-allowed opacity-50 grayscale">
+          <span className="text-lg text-center w-6">👥</span>
+          {!collapsed && <span className="font-bold text-sm">{UI_TEXT.contacts}</span>}
         </div>
 
-        <div className="flex items-center gap-3 px-4 py-3 text-slate-400 dark:text-slate-600 cursor-not-allowed">
-          <span>📈</span>
-          {!collapsed && <span>{UI_TEXT.reports}</span>}
+        <div className="flex items-center gap-3 px-4 py-3 text-slate-400 cursor-not-allowed opacity-50 grayscale">
+          <span className="text-lg text-center w-6">📈</span>
+          {!collapsed && <span className="font-bold text-sm">{UI_TEXT.reports}</span>}
         </div>
-
       </nav>
 
       {/* Footer */}
-      <div className="mt-auto p-4 border-t border-slate-300 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
+      <div className={`mt-auto p-6 border-t ${BRANDING.colors.border} ${BRANDING.colors.mutedText}`}>
         {!collapsed && (
-          <>
-            <div className="mb-4">MTDS Starter CRM v1</div>
+          <div className="flex flex-col gap-4">
+            <div className="text-[10px] font-bold uppercase tracking-widest opacity-60">
+              CRM Engine v1.0
+            </div>
             <ThemeToggle />
-          </>
+          </div>
         )}
       </div>
     </motion.aside>
   )
-}
+}
