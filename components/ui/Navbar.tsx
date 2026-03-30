@@ -34,7 +34,11 @@ export default function Navbar() {
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                     <a href="#" className="flex items-center gap-3 group relative z-50">
-                        <img src="/logo.png" alt="Masio TDS Logo" className="h-10 w-auto invert" />
+                        <div className="relative">
+                            {/* Glow behind logo */}
+                            <div className="absolute inset-0 bg-blue-400/30 blur-xl rounded-full scale-150 group-hover:bg-blue-400/50 transition-all duration-500 animate-pulse" />
+                            <img src="/logo.png" alt="Masio TDS Logo" className="h-14 w-auto invert relative z-10 drop-shadow-[0_0_15px_rgba(96,165,250,0.4)] group-hover:drop-shadow-[0_0_25px_rgba(96,165,250,0.6)] transition-all duration-300" />
+                        </div>
                     </a>
 
                     {/* Desktop Navigation */}
