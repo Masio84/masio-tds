@@ -34,18 +34,7 @@ export default function Navbar() {
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                     <a href="#" className="flex items-center gap-3 group relative z-50">
-                        {/* Si guardas la imagen en la carpeta public como logo.png, descomenta la siguiente línea y borra el div de abajo */}
-                        {/* <img src="/logo.png" alt="Masio TDS Logo" className="h-10 w-auto invert" /> */}
-
-                        {/* Recreación del logo en SVG/Texto para desarrollo */}
-                        <div className="flex flex-col">
-                            <span className="text-xl font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
-                                @MASIO.TDS
-                            </span>
-                            <span className="text-[10px] uppercase tracking-wider text-neutral-400">
-                                Creative Developer Studio
-                            </span>
-                        </div>
+                        <img src="/logo.png" alt="Masio TDS Logo" className="h-10 w-auto invert" />
                     </a>
 
                     {/* Desktop Navigation */}
