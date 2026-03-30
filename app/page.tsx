@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client"
 
 import { useState } from "react"
@@ -99,6 +100,22 @@ className={`p-3 ${BRANDING.colors.primary} ${BRANDING.colors.primaryText} font-b
           </button>
         </form>
       )}
+=======
+import Hero from "@/components/sections/Hero"
+import About from "@/components/sections/About"
+import Services from "@/components/sections/Services"
+import Portfolio from "@/components/sections/Portfolio"
+import Contact from "@/components/sections/Contact"
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-black flex flex-col">
+      <Hero />
+      <About />
+      <Services />
+      <Portfolio />
+      <Contact />
+>>>>>>> fe5435f0a26d62894eb6a10d3b02f82b3f681fd5
     </main>
   )
 }

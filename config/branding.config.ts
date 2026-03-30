@@ -1,23 +1,23 @@
 export const BRANDING = {
   colors: {
-    background: "bg-slate-200",
-    surface: "bg-white",
-    sidebar: "bg-slate-900",
-    sidebarText: "text-slate-200",
-    text: "text-slate-900",
-    mutedText: "text-slate-600",
-    border: "border-slate-300",
-    primary: "bg-slate-900",
-    primaryText: "text-white",
-    danger: "bg-red-600",
-    success: "bg-emerald-600",
-    shadow: "shadow-xl",
+    background: "bg-black",
+    surface: "bg-neutral-900/50 backdrop-blur-xl",
+    sidebar: "bg-black",
+    sidebarText: "text-neutral-400",
+    text: "text-white",
+    mutedText: "text-neutral-400",
+    border: "border-neutral-800",
+    primary: "bg-blue-500",
+    primaryText: "text-black",
+    danger: "bg-red-500",
+    success: "bg-blue-400",
+    shadow: "shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)]",
   },
 
   typography: {
-    titleSize: "text-3xl",
-    spacing: "p-10",
+    titleSize: "text-4xl",
+    spacing: "px-10 py-10",
   },
 
-  mode: "corporate-contrast",
+  mode: "dark-premium",
 }

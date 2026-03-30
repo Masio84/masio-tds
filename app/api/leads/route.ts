@@ -1,25 +1,35 @@
 import { NextResponse } from "next/server"
+<<<<<<< HEAD
 import { neon } from "@neondatabase/serverless"
 import { APP_CONFIG } from "@/config/app.config"
+=======
+import { createClient } from "@supabase/supabase-js"
+>>>>>>> fe5435f0a26d62894eb6a10d3b02f82b3f681fd5
 
-function getSql() {
-  const databaseUrl = process.env.DATABASE_URL
-  if (!databaseUrl) {
-    throw new Error("DATABASE_URL not defined")
+// Inicializamos Supabase
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("Missing Supabase credentials in .env file")
   }
-  return neon(databaseUrl)
+
+  // Usamos el Service Role para escritura directa y bypassing RLS en modo API Server.
+  return createClient(supabaseUrl, supabaseServiceKey)
 }
 
 // 🔹 GET → Obtener todos los leads
 export async function GET() {
   try {
-    const sql = getSql()
+    const supabase = getSupabaseClient()
 
-    const leads = await sql`
-      SELECT *
-      FROM leads
-      ORDER BY created_at DESC
-    `
+    const { data: leads, error } = await supabase
+      .from("leads")
+      .select("*")
+      .order("created_at", { ascending: false })
+
+    if (error) throw error
 
     return NextResponse.json(leads)
   } catch (error) {
@@ -49,13 +59,15 @@ export async function POST(request: Request) {
       )
     }
 
-    const sql = getSql()
+    const supabase = getSupabaseClient()
 
-    await sql`
-      INSERT INTO leads (name, email, phone, message)
-      VALUES (${name}, ${email}, ${phone}, ${message})
-    `
+    const { error } = await supabase
+      .from("leads")
+      .insert([
+        { name, email, phone, message }
+      ])
 
+<<<<<<< HEAD
    // Telegram solo si está habilitado
 if (
   APP_CONFIG.features.enableTelegram &&
@@ -64,6 +76,18 @@ if (
 ) {
   const telegramMessage = `
 <b>📥 Nuevo Lead — ${APP_CONFIG.appName}</b>
+=======
+    if (error) throw error
+
+    // Telegram elegante (Opcional - No bloquea el éxito)
+    try {
+      if (
+        process.env.TELEGRAM_BOT_TOKEN &&
+        process.env.TELEGRAM_CHAT_ID
+      ) {
+        const telegramMessage = `
+<b>📥 Nuevo Lead — MasioTDS</b>
+>>>>>>> fe5435f0a26d62894eb6a10d3b02f82b3f681fd5
 
 ━━━━━━━━━━━━━━━━━━
 
@@ -83,6 +107,7 @@ ${message}
 <i>${APP_CONFIG.appTagline}</i>
 `
 
+<<<<<<< HEAD
   await fetch(
     `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
     {
@@ -96,15 +121,35 @@ ${message}
         parse_mode: "HTML",
         disable_web_page_preview: true,
       }),
+=======
+        await fetch(
+          `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              chat_id: process.env.TELEGRAM_CHAT_ID,
+              text: telegramMessage,
+              parse_mode: "HTML",
+              disable_web_page_preview: true,
+            }),
+          }
+        )
+      }
+    } catch (teleError) {
+      console.error("Telegram Notification Error (Non-fatal):", teleError)
+>>>>>>> fe5435f0a26d62894eb6a10d3b02f82b3f681fd5
     }
   )
 }
 
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error(error)
+    return NextResponse.json({ success: true, message: "Lead registered successfully" })
+  } catch (error: any) {
+    console.error("Supabase Error:", error)
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: error?.message || "Internal Server Error" },
       { status: 500 }
     )
   }
