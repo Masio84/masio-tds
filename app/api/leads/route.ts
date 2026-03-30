@@ -1,33 +1,15 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
+import { neon } from "@neondatabase/serverless"
 import { APP_CONFIG } from "@/config/app.config"
 
-// Inicializamos Supabase
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error("Missing Supabase credentials in .env file")
-  }
-
-  // Usamos el Service Role para escritura directa y bypassing RLS en modo API Server.
-  return createClient(supabaseUrl, supabaseServiceKey)
-}
+// Inicializamos Neon
+const sql = neon(process.env.DATABASE_URL || "")
 
 // 🔹 GET → Obtener todos los leads
 export async function GET() {
   try {
-    const supabase = getSupabaseClient()
-
-    const { data: leads, error } = await supabase
-      .from("leads")
-      .select("*")
-      .order("created_at", { ascending: false })
-
-    if (error) throw error
-
-    return NextResponse.json(leads)
+    const data = await sql`SELECT * FROM leads ORDER BY created_at DESC`
+    return NextResponse.json(data)
   } catch (error) {
     console.error(error)
     return NextResponse.json(
@@ -55,15 +37,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const supabase = getSupabaseClient()
-
-    const { error: supabaseError } = await supabase
-      .from("leads")
-      .insert([
-        { name, email, phone, message }
-      ])
-
-    if (supabaseError) throw supabaseError
+    await sql`INSERT INTO leads (name, email, phone, message) VALUES (${name}, ${email}, ${phone || null}, ${message})`
 
     // Telegram elegante (Opcional - No bloquea el éxito)
     try {
