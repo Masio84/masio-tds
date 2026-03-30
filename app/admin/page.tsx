@@ -48,11 +48,6 @@ export default function AdminPage() {
     fetchContacts()
   }
 
-  async function handleLogout() {
-    await fetch("/api/logout", { method: "POST" })
-    router.push("/login")
-  }
-
   useEffect(() => {
     fetchContacts()
   }, [])
@@ -63,25 +58,6 @@ export default function AdminPage() {
 
   return (
     <div className={`min-h-screen ${BRANDING.colors.background}`}>
-
-      {/* 🔝 Barra superior */}
-      <div className={`${BRANDING.colors.surface} border-b ${BRANDING.colors.border} px-10 py-5 flex justify-between items-center ${BRANDING.colors.shadow} relative z-10`}>
-        <div>
-          <h1 className={`font-bold text-xl ${BRANDING.colors.text} tracking-tight`}>
-            {APP_CONFIG.appName}
-          </h1>
-          <span className={`${BRANDING.colors.mutedText} text-xs uppercase font-bold tracking-widest`}>
-            {UI_TEXT.panelTitle}
-          </span>
-        </div>
-
-        <button
-          onClick={handleLogout}
-          className={`px-5 py-2 rounded-lg border ${BRANDING.colors.border} ${BRANDING.colors.text} hover:bg-slate-200 transition-all font-semibold text-sm`}
-        >
-          {UI_TEXT.logout}
-        </button>
-      </div>
 
       <main className="p-10 max-w-7xl mx-auto">
 

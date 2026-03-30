@@ -8,10 +8,17 @@ import { APP_CONFIG } from "@/app/../config/app.config"
 import { UI_TEXT } from "@/app/../config/ui.config"
 import { BRANDING } from "@/app/../config/branding.config"
 import ThemeToggle from "./ThemeToggle"
+import { useRouter } from "next/navigation"
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [collapsed, setCollapsed] = useState(false)
+
+  async function handleLogout() {
+    await fetch("/api/logout", { method: "POST" })
+    router.push("/login")
+  }
 
   const activeLinkStyle = `${BRANDING.colors.primary} ${BRANDING.colors.primaryText}`
   const inactiveLinkStyle = `${BRANDING.colors.text} hover:bg-slate-200 dark:hover:bg-slate-800 opacity-70`
@@ -79,6 +86,27 @@ export default function Sidebar() {
               CRM Engine v1.0
             </div>
             <ThemeToggle />
+            <button
+              onClick={handleLogout}
+              className={`
+                w-full 
+                mt-2 
+                px-4 
+                py-2 
+                rounded-lg 
+                bg-red-500/10 
+                text-red-500 
+                border 
+                border-red-500/20 
+                text-sm 
+                font-bold 
+                hover:bg-red-500 
+                hover:text-white 
+                transition-all
+              `}
+            >
+              Cerrar sesión
+            </button>
           </div>
         )}
       </div>

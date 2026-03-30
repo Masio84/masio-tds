@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/ui/Navbar";
-import Footer from "@/components/ui/Footer";
 import CustomCursor from "@/components/ui/CustomCursor";
+import ConditionalNavigation from "@/app/components/ConditionalNavigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +30,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white relative`}
       >
         <CustomCursor />
-        <Navbar />
-        {children}
-        <Footer />
+        <ConditionalNavigation>
+          {children}
+        </ConditionalNavigation>
       </body>
     </html>
   )
